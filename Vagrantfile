@@ -26,8 +26,11 @@ Vagrant::Config.run do |config|
   config.vm.share_folder "vm_data", "/vm_data", "/vm_data"
 
   config.vm.provision :chef_solo do |chef|
-    chef.run_list = [
-      "recipe[linux-vm::default]"
-    ]
+    chef.run_list = ["recipe[linux-vm::default]"]
+
+    chef.roles_path = "roles"
+    chef.add_role("base")
+
+
   end
 end
