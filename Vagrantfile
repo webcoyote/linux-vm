@@ -29,7 +29,8 @@ Vagrant::Config.run do |config|
     chef.data_bags_path = "./data_bags"
     chef.run_list = [
       "recipe[linux-vm::default]",
-      "recipe[linux-vm::users]",
+      "recipe[chef-solo-search]",
+      "recipe[users::sysadmins]",
     ]
 
     chef.roles_path = "roles"
