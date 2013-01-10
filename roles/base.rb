@@ -1,8 +1,7 @@
 name 'base'
-description 'base files'
+description 'base files shared for servers and developers'
 
 run_list  'recipe[curl]',
           'recipe[git]',
-          'recipe[zsh]',
-          'recipe[build-essential]',
-          'role[openssh]'
+          'recipe[openssh]',
+          'recipe[build-essential]'
