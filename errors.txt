@@ -1,0 +1,12 @@
+This error really means that the "cookbooks" directory on the host is missing
+
+    [default] Mounting shared folders...
+    [default] -- v-root: /vagrant
+    [default] -- vm_data: /vm_data
+    [default] -- v-csr-3: /tmp/vagrant-chef-1/chef-solo-3/roles
+    [default] -- v-csc-2: /tmp/vagrant-chef-1/chef-solo-2/cookbooks
+    The following SSH command responded with a non-zero exit status.
+    Vagrant assumes that this means the command failed!
+
+    mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` v-csc-2 /tmp/vagrant-chef-1/chef-solo-2/cookbooks
+
