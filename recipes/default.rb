@@ -7,8 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
-package 'tree'
-package 'wget'
+#package 'tree'
+#package 'wget'
 
 # TODO
 #package 'ntp'

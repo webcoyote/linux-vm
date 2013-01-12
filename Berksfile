@@ -11,12 +11,9 @@ cookbook 'chef-solo-search', :git => 'git://github.com/webcoyote/chef-solo-searc
 # have copy-protection checks related to chef-solo
 cookbook 'users', '= 1.1.2'
 
-# Base recipes
-cookbook 'build-essential'
-cookbook 'curl'
-cookbook 'git'
+#cookbook 'build-essential'
+#cookbook 'curl'
+#cookbook 'git'
 cookbook 'openssh'
-#cookbook 'sudo'
-
-# Developer recipes
+cookbook 'sudo'
 cookbook 'zsh'
