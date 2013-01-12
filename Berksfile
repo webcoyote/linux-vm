@@ -12,10 +12,11 @@ cookbook 'chef-solo-search', :git => 'git://github.com/webcoyote/chef-solo-searc
 cookbook 'users', '= 1.1.2'
 
 # Base recipes
+cookbook 'build-essential'
 cookbook 'curl'
 cookbook 'git'
 cookbook 'openssh'
-cookbook 'build-essential'
+#cookbook 'sudo'
 
 # Developer recipes
 cookbook 'zsh'

@@ -26,6 +26,8 @@ Vagrant::Config.run do |config|
   config.vm.share_folder "vm_data", "/vm_data", "/vm_data"
 
   config.vm.provision :chef_solo do |chef|
+    #chef.log_level = :debug
+
     chef.data_bags_path = "data_bags"
     chef.roles_path     = "roles"
 
