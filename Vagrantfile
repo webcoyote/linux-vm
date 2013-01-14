@@ -33,8 +33,6 @@ Vagrant::Config.run do |config|
 
     chef.run_list = [
       "recipe[linux-vm::default]",
-      "recipe[chef-solo-search]",
-      "recipe[users::sysadmins]",
     ]
 
     chef.add_role("developer")
