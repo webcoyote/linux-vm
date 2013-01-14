@@ -15,3 +15,9 @@
 #package 'meld'
 #package 'devilspie'
 #package 'sqlitebrowser'
+
+
+sudo 'pat' do
+  user      'pat'
+  nopasswd  true
+end

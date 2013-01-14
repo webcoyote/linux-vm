@@ -3,11 +3,10 @@ description 'developer workstation'
 
 recipes = [
   'recipe[chef-solo-search]', # required for users::sysadmins
-  'recipe[users::sysadmins]',
-  'recipe[openssh]',
-  'recipe[sudo]',
-  'recipe[zsh]',
-
+  'recipe[users::sysadmins]', # create users listed in data_bags/users/*
+  'recipe[openssh]',          # configure ssh from attributes/ssh.rb
+  'recipe[sudo]',             # configure sudo from attributes below
+  'recipe[zsh]',              # a proper shell
 #  'recipe[build-essential]',
 #  'recipe[curl]',
 #  'recipe[git]',
@@ -15,9 +14,11 @@ recipes = [
 #  'recipe[google-chrome]',
 #  'recipe[skype]'
 ]
-
 run_list(recipes)
 
+
+# Set sudo options
+# messing with this will break vagrant; be careful
 sudoers_defaults = [
   '!visiblepw',
   'env_reset',
@@ -30,13 +31,10 @@ sudoers_defaults = [
   'always_set_home',
   'secure_path = /sbin:/bin:/usr/sbin:/usr/bin'
 ]
-
 override_attributes(
   :authorization => {
     :sudo => {
-      :users => [ "pat" ],
-      :passwordless => true,
-      :include_sudoers_d => true, # vagrant needs sudo access
+      :include_sudoers_d => true,
       :sudoers_defaults => sudoers_defaults,
     }
   }
