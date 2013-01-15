@@ -8,13 +8,13 @@ version          "0.1.0"
 
 # Use 1.1.2, which is the last version of this cookbook that doesn't
 # have copy-protection checks related to chef-solo
-cookbook 'users', '= 1.1.2'
+depends 'users', '= 1.1.2'
 
-cookbook 'build-essential'
-cookbook 'curl'
-cookbook 'git'
-cookbook 'openssh'
-cookbook 'sudo'
-cookbook 'zsh'
+depends 'build-essential'
+depends 'curl'
+depends 'git'
+depends 'openssh'
+depends 'sudo'
+depends 'zsh'
 
-cookbook 'chef-solo-search'
+depends 'chef-solo-search'
