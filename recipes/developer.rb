@@ -2,16 +2,20 @@
 # Cookbook Name:: linux-vm
 # Recipe:: developer
 #
-# Copyright (C) 2012 YOUR_NAME
-#
-# All rights reserved - Do Not Redistribute
-#
 
 include_recipe 'openssh' # configure ssh from attributes/ssh.rb
+include_recipe 'git'
 include_recipe 'zsh'     # a proper shell
-#  'recipe[build-essential]',
-#  'recipe[curl]',
-#  'recipe[git]',
-#  'recipe[firefox]',
-#  'recipe[google-chrome]',
-#  'recipe[skype]'
+
+#include_recipe 'build-essential'
+#include_recipe 'curl'
+#include_recipe 'firefox'
+#include_recipe 'google-chrome'
+#include_recipe 'skype'
+
+#package 'tree'
+#package 'wget'
+#package 'ntp'
+#package 'meld'
+#package 'devilspie'
+#package 'sqlitebrowser'

@@ -27,11 +27,7 @@ Vagrant::Config.run do |config|
 
   config.vm.provision :chef_solo do |chef|
     #chef.log_level = :debug
-
     chef.data_bags_path = "data_bags"
-
-    chef.run_list = [
-      "recipe[linux-vm::default]"
-    ]
+    chef.run_list = [ "recipe[linux-vm::default]" ]
   end
 end
