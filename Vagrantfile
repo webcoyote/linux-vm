@@ -31,8 +31,7 @@ Vagrant::Config.run do |config|
     chef.data_bags_path = "data_bags"
 
     chef.run_list = [
-      "recipe[linux-vm::developer]",
-      "recipe[linux-vm::users]"
+      "recipe[linux-vm::default]"
     ]
   end
 end
