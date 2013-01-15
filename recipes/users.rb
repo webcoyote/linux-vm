@@ -23,9 +23,9 @@ node.set[:authorization][:sudo][:sudoers_defaults] = [
   'secure_path = /sbin:/bin:/usr/sbin:/usr/bin'
 ]
 
-include_recipe 'recipe[chef-solo-search]', # required for users::sysadmins
-include_recipe 'recipe[users::sysadmins]'
-include_recipe 'recipe[sudo]'
+include_recipe 'chef-solo-search' # required for users::sysadmins
+include_recipe 'users::sysadmins'
+include_recipe 'sudo'
 
 sudo 'pat' do
   user      'pat'

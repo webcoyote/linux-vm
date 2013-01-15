@@ -7,8 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe 'recipe[openssh]' # configure ssh from attributes/ssh.rb
-include_recipe 'recipe[zsh]'     # a proper shell
+include_recipe 'openssh' # configure ssh from attributes/ssh.rb
+include_recipe 'zsh'     # a proper shell
 #  'recipe[build-essential]',
 #  'recipe[curl]',
 #  'recipe[git]',
