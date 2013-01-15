@@ -7,6 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "linux-vm::developer"
+include_recipe "linux-vm::users"
+
 #package 'tree'
 #package 'wget'
 
@@ -15,9 +18,3 @@
 #package 'meld'
 #package 'devilspie'
 #package 'sqlitebrowser'
-
-
-sudo 'pat' do
-  user      'pat'
-  nopasswd  true
-end
