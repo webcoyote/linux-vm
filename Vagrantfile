@@ -29,12 +29,10 @@ Vagrant::Config.run do |config|
     #chef.log_level = :debug
 
     chef.data_bags_path = "data_bags"
-    chef.roles_path     = "roles"
 
     chef.run_list = [
-      "recipe[linux-vm::default]",
+      "recipe[linux-vm::developer]",
+      "recipe[linux-vm::users]"
     ]
-
-    chef.add_role("developer")
   end
 end
