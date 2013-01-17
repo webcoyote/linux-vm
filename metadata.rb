@@ -24,3 +24,4 @@ end
 
 # Cookbooks with dependencies listed in Berksfile
   depends 'chef-solo-search'
+  depends 'chef-dotfiles'
