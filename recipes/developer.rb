@@ -3,19 +3,21 @@
 # Recipe:: developer
 #
 
-include_recipe 'openssh' # configure ssh from attributes/ssh.rb
-include_recipe 'git'
-include_recipe 'zsh'     # a proper shell
+# Install recipes specified in ../metadata.rb and ../Berskfile
+include_recipe 'git'      # required for this recipe to work
+include_recipe 'openssh'  # configure ssh from attributes/ssh.rb
+include_recipe 'zsh'      # a proper shell
+include_recipe 'curl'     # Internet swiss-army knife
 
+# Add useful packages
+package 'wget'            # like curl, only different
+package 'tree'            # list directory structure in tree format
+
+# add your recipes here; remember they must be listed in:
+#   ../metadata.rb (for recipes from Opscode)
+#   ../Berksfile   (for recipes from other locations)
 #include_recipe 'build-essential'
-#include_recipe 'curl'
-#include_recipe 'firefox'
-#include_recipe 'google-chrome'
-#include_recipe 'skype'
 
-#package 'tree'
-#package 'wget'
+# Add your packages here
 #package 'ntp'
-#package 'meld'
-#package 'devilspie'
-#package 'sqlitebrowser'
+
