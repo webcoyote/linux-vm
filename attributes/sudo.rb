@@ -2,7 +2,15 @@
 # the rest of the work is done in users.rb
 
 sudoers_defaults = nil
-if platform_family?("rhel")
+case node["platform_family"]
+when "debian"
+  # do things on debian-ish platforms (debian, ubuntu, linuxmint)
+  sudoers_defaults = [
+    'env_reset',
+    'exempt_group=admin',
+  ]
+when "rhel"
+  # do things on RHEL platforms (redhat, centos, scientific, etc)
   sudoers_defaults = [
     '!visiblepw',
     'env_reset',
@@ -15,6 +23,8 @@ if platform_family?("rhel")
     'always_set_home',
     'secure_path = /sbin:/bin:/usr/sbin:/usr/bin'
   ]
+else
+  # do things for unknown platform
 end
 
 node["authorization"] = {

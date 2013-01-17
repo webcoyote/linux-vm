@@ -3,17 +3,21 @@ require 'berkshelf/vagrant'
 Vagrant::Config.run do |config|
   config.vm.host_name = "devbox"
 
-  # OS selection
-  config.vm.box = "Berkshelf-CentOS-6.3-x86_64-minimal"
-  config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
+  # OS selection; for a list of boxes see http://www.vagrantbox.es/
+    # Use Ubuntu Lucid Lynx image from
+      config.vm.box = "lucid64"
+      config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
+    # Use CentOS 6.3 image from Berkshelf https://github.com/reset/veewee-berkshelf
+      #config.vm.box = "Berkshelf-CentOS-6.3-x86_64-minimal"
+      #config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
 
   # Hardware
   config.vm.customize ["modifyvm", :id, "--memory", 1536]
   config.vm.customize ["modifyvm", :id, "--cpus", 2]
 
   # Network configuration
-  #config.vm.network :bridged
-  config.vm.network :hostonly, "192.168.33.10"
+  config.vm.network :bridged
+  #config.vm.network :hostonly, "192.168.33.10"
   #config.vm.forward_port 80, 8080
 
   # Show GUI mode in VirtualBox

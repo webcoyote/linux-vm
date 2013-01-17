@@ -4,12 +4,9 @@ maintainer_email "pat@codeofhonor.com"
 license          "MIT License"
 description      "Installs and configures linux-vm"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.2.0"
+version          "0.3.0"
 
-# This project presently only supports some version of Linux.
-# To support other versions of Linux you will need to change
-# attributes/sudo.rb -- search for platform_family?("rhel")
-%w{ redhat centos scientific }.each do |os|
+%w{ubuntu debian centos redhat amazon scientific fedora}.each do |os|
   supports os
 end
 

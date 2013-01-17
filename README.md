@@ -9,15 +9,14 @@ vanilla Windows, so this should work even if you don't have any of the
 pre-requisites yet.
 
 
-# Features of the virtual machine you will create
+# Features of the Linux virtual machine you will create
 
-* Runs Linux (Centos 6.3 x86-64 )
 * Configures your user account passwordless access to sudo
 * SSH key-based login; access via passwords disabled
 * root access disabled for security
 * Installs your "dotfiles" from a separate git repository
 * Easy maintenance of chef recipes using berkshelf
-
+* Automates updates of VirtualBox Guest additions
 
 # Installation and configuration
 
@@ -42,7 +41,6 @@ Configure git
 
 [Generate ssh keys](https://help.github.com/articles/generating-ssh-keys)
 
-
 # Cloning the repository
 
 In a Windows command-shell:
@@ -56,9 +54,6 @@ In a Windows command-shell:
     cd linux-vm
 
 # Edit the virtual machine configuration files
-
-Use your favorite text editor to modify these files to configure your
-Linux virtual machine as you like it.
 
 REQUIRED: configure users in data_bags/users/*.json
   * Create a file like "pat.json" with your user settings
