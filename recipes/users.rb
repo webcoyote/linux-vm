@@ -16,6 +16,9 @@ include_recipe 'users::sysadmins'
 # (i.e. passwords). See attributes/ssh.rb for details.
 include_recipe 'sudo'
 
+# Git-clone user dotfiles from data_bags/admins/*.json
+include_recipe 'chef-dotfiles'
+
 # Find any users listed in data_bags/users/*.json that
 # are members of sysadmin group and not being removed
 # then configure those users

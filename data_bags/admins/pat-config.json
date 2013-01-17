@@ -1,0 +1,17 @@
+{
+  "id": "pat",
+  "dotfiles": {
+    "comment": "Config files for Patrick Wyatt",
+    "enabled_standard": false,
+    "enabled_custom": true,
+    "custom_dotfiles": [
+      ".devilspie",
+      "bin",
+      ".gemrc",
+      ".rspec",
+      ".rvmrc",
+      ".zshrc"
+    ],
+    "custom_dotfiles_repo": "git://github.com/webcoyote/my_dotfiles.git"
+  }
+}
