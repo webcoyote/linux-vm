@@ -19,6 +19,13 @@ include_recipe 'sudo'
 # Git-clone user dotfiles from data_bags/admins/*.json
 include_recipe 'chef-dotfiles'
 
+# Some VM box images will already have the vagrant user
+# configured in /etc/sudoers.d, but some won't; make it so
+sudo "vagrant" do
+  user      "vagrant"
+  nopasswd  true
+end
+
 # Find any users listed in data_bags/users/*.json that
 # are members of sysadmin group and not being removed
 # then configure those users
