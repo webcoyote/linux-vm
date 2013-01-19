@@ -3,10 +3,6 @@ require 'berkshelf/vagrant'
 Vagrant::Config.run do |config|
   config.vm.host_name = "devbox"
 
-  # vbguest does not work on CentOS; disable for now and do it manually
-  # submitted https://github.com/dotless-de/vagrant-vbguest/issues/39
-  config.vbguest.auto_update = false
-
   # OS selection; for a list of boxes see http://www.vagrantbox.es/
     # Use Ubuntu Lucid Lynx image from
       config.vm.box = "lucid64"
