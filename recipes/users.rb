@@ -25,6 +25,9 @@ sudo "vagrant" do
   user      "vagrant"
   nopasswd  true
 end
+execute "Remove password for vagrant" do
+  command "sudo passwd -d vagrant"
+end
 
 # Find any users listed in data_bags/users/*.json that
 # are members of sysadmin group and not being removed
@@ -35,6 +38,11 @@ search("users", "groups:sysadmin NOT action:remove") do |u|
   sudo u['id'] do
     user      u['id']
     nopasswd  true
+  end
+
+  # Remove password for user
+  execute "Remove password for #{u['id']}" do
+    command "sudo passwd -d #{u['id']}"
   end
 
   # Create a password-less SSH key if it doesn't already exist

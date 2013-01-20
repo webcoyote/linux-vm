@@ -1,12 +1,34 @@
-This error really means that the "cookbooks" directory on the host is missing
+### Cookbook not found for linux-vm (Chef::Exceptions::CookbookNotFound)
 
-    [default] Mounting shared folders...
-    [default] -- v-root: /vagrant
-    [default] -- vm_data: /vm_data
-    [default] -- v-csr-3: /tmp/vagrant-chef-1/chef-solo-3/roles
-    [default] -- v-csc-2: /tmp/vagrant-chef-1/chef-solo-2/cookbooks
-    The following SSH command responded with a non-zero exit status.
-    Vagrant assumes that this means the command failed!
+  => The disk mounts probably got flattened
 
-    mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` v-csc-2 /tmp/vagrant-chef-1/chef-solo-2/cookbooks
+    vagrant reload
 
+
+### Hang when
+  "Waiting for VM to boot. This can take a few minutes."
+  "Running provisioner: Vagrant::Provisioners::ChefSolo"
+
+  => login to box (ssh or tty) and run:
+
+    sudo dhclient
+
+### Missing cookbooks directory
+
+  This error really means that the "cookbooks" directory on the host is missing
+
+  [default] Mounting shared folders...
+  [default] -- v-root: /vagrant
+  [default] -- vm_data: /vm_data
+  [default] -- v-csr-3: /tmp/vagrant-chef-1/chef-solo-3/roles
+  [default] -- v-csc-2: /tmp/vagrant-chef-1/chef-solo-2/cookbooks
+  The following SSH command responded with a non-zero exit status.
+  Vagrant assumes that this means the command failed!
+
+  mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` v-csc-2 /tmp/vagrant-chef-1/chef-solo-2/cookbooks
+
+### Gnome desktop freezes when you click or type
+
+  => reboot; open ssh session
+
+    remove ~/.Xauthority

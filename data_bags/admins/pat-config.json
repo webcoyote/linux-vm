@@ -5,7 +5,6 @@
     "enabled_standard": false,
     "enabled_custom": true,
     "custom_dotfiles": [
-      ".devilspie",
       "bin",
       ".gemrc",
       ".rspec",
