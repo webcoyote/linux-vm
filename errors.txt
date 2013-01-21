@@ -5,13 +5,30 @@
     vagrant reload
 
 
+### Cannot mount disk
+
+  mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` v-root /vagrant
+  ERROR vagrant: Vagrant experienced an error! Details:
+  ERROR vagrant: #<Vagrant::Errors::VagrantError: The following SSH command responded with a non-zero exit status.
+  Vagrant assumes that this means the command failed!
+  /sbin/mount.vboxsf: mounting failed with the error: No such device
+
+  Problem: VirtualBox guest additions are out-of-date. Run:
+
+    vagrant vbguest --do install --force
+
+
 ### Hang when
   "Waiting for VM to boot. This can take a few minutes."
+  - or -
   "Running provisioner: Vagrant::Provisioners::ChefSolo"
+  - or -
+  "Configuring and enabling network interfaces..."
 
   => login to box (ssh or tty) and run:
 
     sudo dhclient
+    # Nope: sudo /etc/init.d/network restart
 
 ### Missing cookbooks directory
 

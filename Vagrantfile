@@ -21,8 +21,8 @@ Vagrant::Config.run do |config|
 
   # Network configuration
   #config.vm.forward_port 80, 8080
-  #config.vm.network :bridged
-  config.vm.network :hostonly, "192.168.33.10"
+  config.vm.network :bridged
+  #config.vm.network :hostonly, "192.168.33.10"
 
   # Show GUI mode in VirtualBox
   config.vm.boot_mode = :gui

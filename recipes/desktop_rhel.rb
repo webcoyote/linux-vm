@@ -3,7 +3,12 @@
 # Recipe:: desktop_rhel
 #
 
-include_recipe 'yum::epel'
+include_recipe 'yum::epel'  # Enterprise Linux
+include_recipe 'yum::remi'  # For Firefox
+
+execute "yum update" do
+  command "yum update -y"
+end
 
 execute "install gnome" do
   command "yum groupinstall -y basic-desktop desktop-platform x11 fonts"
