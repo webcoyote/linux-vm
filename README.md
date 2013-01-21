@@ -8,15 +8,16 @@ I've written these instructions based on the assumption that you're running
 vanilla Windows, so this should work even if you don't have any of the
 pre-requisites yet.
 
-
 # Features of the Linux virtual machine you will create
 
-* Configures your user account passwordless access to sudo
-* SSH key-based login; access via passwords disabled
-* root access disabled for security
-* Installs your "dotfiles" from a separate git repository
-* Easy maintenance of chef recipes using berkshelf
-* Automates updates of VirtualBox Guest additions
+* Password-less login to local console
+* Password-less access to sudo for your account
+* SSH key-based login; SSH access via passwords disabled
+* Root login disabled (for security)
+* Easily update VirtualBox Guest Additions ("vagrant vbguest --do rebuild")
+* Gnome desktop, Firefox browser
+* Optional: XMonad window manager
+* Optional: installs your "dotfiles" from a separate git repository
 
 # Installation and configuration
 
