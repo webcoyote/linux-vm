@@ -3,7 +3,7 @@ require 'berkshelf/vagrant'
 Vagrant::Config.run do |config|
   config.vm.host_name = "devbox"
 
-  # Update VirtualBox Guest Additions manually so it occurs after X is installed. Use:
+  # Run this command manually after XWindows is installed:
   # vagrant vbguest --do install
   config.vbguest.auto_update = false
 
@@ -18,6 +18,9 @@ Vagrant::Config.run do |config|
   # Hardware
   config.vm.customize ["modifyvm", :id, "--memory", 1536]
   config.vm.customize ["modifyvm", :id, "--cpus", 2]
+  config.vm.customize ["modifyvm", :id, "--vram", 16]
+  config.vm.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+  config.vm.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
 
   # Network configuration
   #config.vm.forward_port 80, 8080
@@ -34,7 +37,6 @@ Vagrant::Config.run do |config|
   config.vm.share_folder "vm_data", "/vm_data", "/vm_data"
 
   config.vm.provision :chef_solo do |chef|
-    #chef.log_level = :debug
     chef.data_bags_path = "data_bags"
     chef.run_list = [ "recipe[linux-vm::default]" ]
   end

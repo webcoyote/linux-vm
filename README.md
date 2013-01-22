@@ -35,6 +35,12 @@ Install Ruby gems
     gem install bundler
     bundle install
 
+Now install a fix for vagrant in versions less than 1.06
+(see https://github.com/mitchellh/vagrant/issues/1212 for details)
+
+    gem uninstall vagrant
+    install vagrant using installer: http://downloads.vagrantup.com
+
 Configure git
 
     git config --global user.name "Your Name Here"

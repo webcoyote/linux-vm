@@ -50,3 +50,23 @@ search("users", "window-manager:xmonad NOT action:remove") do |u|
   end
 
 end
+
+# Enable one user to login automatically to the console
+search("users", "desktop-autologin:true NOT action:remove") do |u|
+
+  directory "/etc/gdm" do
+    owner 'root'
+    group 'root'
+    mode '0755'
+  end
+
+  template "/etc/gdm/custom.conf" do
+    source "custom.conf.erb"
+    owner 'root'
+    group 'root'
+    mode '0644'
+    action :create
+    variables(:username => u['id'])
+  end
+
+end

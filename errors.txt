@@ -1,3 +1,13 @@
+
+
+### ERROR warden: Error occurred: not opened for reading
+
+    https://github.com/mitchellh/vagrant/issues/1212
+
+    gem uninstall vagrant
+    install vagrant using installer: http://downloads.vagrantup.com
+
+
 ### Cookbook not found for linux-vm (Chef::Exceptions::CookbookNotFound)
 
   => The disk mounts probably got flattened
