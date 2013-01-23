@@ -70,3 +70,9 @@ search("users", "desktop-autologin:true NOT action:remove") do |u|
   end
 
 end
+
+execute "set inittab to boot into XWindows" do
+  user 'root'
+  command "sed --in-place=.bak -r -e 's/id:[0-9]+:initdefault:/id:5:initdefault:/' /etc/inittab"
+end
+

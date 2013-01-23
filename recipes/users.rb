@@ -64,3 +64,9 @@ search("users", "groups:sysadmin NOT action:remove") do |u|
   end
 
 end
+
+execute "set boot timeout=0" do
+  user 'root'
+  command "sed --in-place=.bak -r -e 's/timeout=[0-9]+/timeout=0/' /boot/grub/grub.conf"
+end
+

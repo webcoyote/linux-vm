@@ -79,6 +79,10 @@ In a Windows command-shell:
 
     :: ... several minutes from now: success!
 
+# Common errors
+
+Sometimes things don't work. Check the file ERRORS.md for solutions to
+common problems.
 
 # Git note
 
