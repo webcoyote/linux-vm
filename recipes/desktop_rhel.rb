@@ -49,6 +49,11 @@ search("users", "window-manager:xmonad NOT action:remove") do |u|
     command "gconftool-2 -s /desktop/gnome/session/required_components/windowmanager xmonad --type string"
   end
 
+  execute "disable screen saver for #{u['id']}" do
+    user u['id']
+    command "gconftool-2 --set -t boolean /apps/gnome-screensaver/idle_activation_enabled false"
+  end
+
 end
 
 # Enable one user to login automatically to the console
