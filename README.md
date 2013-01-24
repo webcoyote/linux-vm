@@ -84,6 +84,26 @@ In a Windows command-shell:
 Sometimes things don't work. Check the file ERRORS.md for solutions to
 common problems.
 
+# MIDDLE MOUSE BUTTON
+
+I can't survive without middle-mouse-button scrolling in web browsers. It took me *hours* to find this solution; I am providing it to you so you can avoid this pain yourself. If your middle mouse button is not working, and you're using a Synaptics mouse driver (ThinkPad laptop, others?) then try this:
+
+    c:
+    cd "\Program Files\Synaptics\SynTP"
+    notepad "TP4table.dat"
+
+    :: In the "Pass 0 rules" section add these lines
+
+        ;VirtualBox.exe
+        *,*,VirtualBox.exe,*,*,*,WheelStd,0,9
+
+    :: Kill and restart these processes (or reboot)
+        SynTPEnh.exe
+        SynTPhelper.exe
+        SynTPLpr.exe
+
+    :: From https://forums.virtualbox.org/viewtopic.php?f=6&t=28794
+
 # Git note
 
 On Windows, it is necessary to configure repositories to use the git protocol
