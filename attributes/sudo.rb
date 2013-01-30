@@ -27,7 +27,7 @@ else
   # do things for unknown platform
 end
 
-node["authorization"] = {
+node.set["authorization"] = {
   "sudo" => {
     "include_sudoers_d" => true,
     "sudoers_defaults" => sudoers_defaults,
