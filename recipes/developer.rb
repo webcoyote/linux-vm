@@ -12,6 +12,7 @@ include_recipe 'curl'     # Internet swiss-army knife
 # Add useful packages
 package 'wget'            # like curl, only different
 package 'tree'            # list directory structure in tree format
+package 'patch'           # apply diff-patches; required for RVM & etc.
 
 # add your recipes here; remember they must be listed in:
 #   ../metadata.rb (for recipes from Opscode)

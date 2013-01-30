@@ -3,12 +3,6 @@
 	[
 		{
 			"path": "/C/Dev/linux-vm"
-		},
-		{
-			"path": "/C/Users/pat/.berkshelf/cookbooks/users-1.1.2"
-		},
-		{
-			"path": "/C/Users/pat/.berkshelf/cookbooks/sudo-2.0.4"
 		}
 	]
 }

@@ -79,6 +79,12 @@ In a Windows command-shell:
 
     :: ... several minutes from now: success!
 
+# One more step: update virtual box guest additions
+
+    vagrant vbguest
+
+... and reboot the VM one more time so that useful settings like Bidirectional Clipboard copy/paste work.
+
 # Common errors
 
 Sometimes things don't work. Check the file ERRORS.md for solutions to
