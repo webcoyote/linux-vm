@@ -1,56 +1,39 @@
+# Todo
 
-## Todo
+## Move recipes from this cookbook into pivotal_workstation and workstation_setup repos.
+
+- leave this recipe to build a server box
+- all client stuff should done during the post-boot process so that it can be used for physical computers as well as VMs
+
+    Gnome Desktop
+    XMonad
+    Firefox
+    meld
+    gnome-system-monitor
 
 
-## Guest additions
+## Configure git
 
-Install correct guest additions for VM
+cat | ~/.gitconfig <<EOF
+[user]
+  name = Patrick Wyatt
+  email = pat@codeofhonor.com
+
+[diff]
+  tool = meld
+
+[difftool]
+  prompt = false
+EOF
+
+
+## Network
+
+CentOS box is a bit cranky with dual NICs.
+=> does not work: Add "GATEWAYDEV=eth1" to /etc/sysconfig/network
+
 
 ## SSH
-Need to change insecure private key for vagrant; it's baked into lucid64 and is therefore insecure --> this would be easy if vagrant incorporates the change-request for multi-SSH key
 
-Remove ./*-ssh.bat files --> this would be easy if vagrant incorporates my change request
+Need to change insecure private key for vagrant; it's baked into base-boxes and is therefore insecure --> this would be easy if vagrant incorporates the change-request for multi-SSH key.
 
-
-## Sublime (and other stuff)
-http://www.technoreply.com/how-to-install-sublime-text-2-on-ubuntu-12-04-unity/
-https://github.com/jtimberman/chef-fundamentals-repo/tree/master/cookbooks/knife-workstation
-
-##
-
-Add X desktop for developers
-
-  #============================================================================
-  # Enable first user to auto-login in XWindows (if ubuntu-desktop installed)
-  directory "/etc/gdm" do
-    owner 'root'
-    group 'root'
-    mode '0755'
-  end
-
-  file "/etc/gdm/custom.conf" do
-    owner 'root'
-    group 'root'
-    mode '0644'
-    action :create
-    content <<-END.gsub(/^ {4}/, '')
-[daemon]
-TimedLoginEnable=true
-AutomaticLoginEnable=true
-TimedLogin=#{admins[0]}
-AutomaticLogin=#{admins[0]}
-TimedLoginDelay=0
-DefaultSession=gnome
-END
-  end
-
-
-# More recipes & packages
-
-  #include_recipe 'firefox'
-  #include_recipe 'google-chrome'
-  #include_recipe 'skype'
-
-  #package 'meld'
-  #package 'devilspie'
-  #package 'sqlitebrowser'
