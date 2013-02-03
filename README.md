@@ -1,65 +1,63 @@
 # Overview of linux-vm
 
-This project is designed to make it easy to build Linux virtual machines on
-Windows for use as dev-environment servers or for use as a Linux desktop. Or
-at least as easy as it can get: hosting one OS on another takes work!
+This project is designed to make it easy to build Linux virtual machines on Windows.
 
-I've written these instructions based on the assumption that you're running
-vanilla Windows, so this should work even if you don't have any of the
-pre-requisites yet.
+I've written these instructions based on the assumption that you're running vanilla Windows so this should work even if you don't have any of the pre-requisites yet.
 
-# Features of the Linux virtual machine you will create
+## What you get
 
+Here are the features of the Linux virtual machine you will create:
+
+* Gnome desktop, Firefox browser
 * Password-less login to local console
 * Password-less access to sudo for your account
 * SSH key-based login; SSH access via passwords disabled
 * Root login disabled (for security)
 * Easily update VirtualBox Guest Additions ("vagrant vbguest --do rebuild")
-* Gnome desktop, Firefox browser
 * Optional: installs your "dotfiles" from a separate git repository
 
-# Installation and configuration
+## Prerequisites
 
-Install the software listed below on your Windows box. You'll want to make sure
-that Git and Ruby are in the PATH. In particular, it is very helpful to
-configure git so that the full set of git utilities in git/bin -- which
-includes the indispensable ssh.exe -- are accessible in the path.
+Install these software packages on your Windows computer
 
 * [Oracle VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-* [Git](http://git-scm.com/download)
 * [Ruby(Windows)](http://rubyinstaller.org/downloads/)
+* [Git](http://git-scm.com/download)
 
-Install Ruby gems
+Configure git so that the full set of git utilities, particularly ssh.exe, are accessible. That is, include "...\git\cmd" AND "...\git\bin" in the PATH.
 
-    gem install bundler
-    bundle install
-
-Now install a fix for vagrant in versions less than 1.06
-(see https://github.com/mitchellh/vagrant/issues/1212 for details)
-
-    gem uninstall vagrant
-    install vagrant using installer: http://downloads.vagrantup.com
-
-Configure git
+## Configure git
 
     git config --global user.name "Your Name Here"
     git config --global user.email "your_email@example.com"
 
-[Generate ssh keys](https://help.github.com/articles/generating-ssh-keys)
+## Clone this repository.
 
-# Cloning the repository
+In a Windows command-shell run these commands
 
-In a Windows command-shell:
-
-    :: clone the repository into c:\dev\linux-vm
+    :: make the C:\dev directory
     c:
-    mkdir \vm_data
     mkdir \dev
     cd \dev
-    git clone git@github.com:webcoyote/linux-vm.git
+
+    :: Clone the repo
+    git clone https://github.com/webcoyote/linux-vm
     cd linux-vm
 
-# Edit the virtual machine configuration files
+    :: Install required ruby gems
+    gem install bundler
+    bundle install
+
+## Bug fix for vagrant
+
+Install a bug fix for vagrant in versions less than 1.06 (see https://github.com/mitchellh/vagrant/issues/1212 for details)
+
+    gem uninstall vagrant
+    install vagrant using installer: http://downloads.vagrantup.com
+
+## Configuration
+
+Before you build your virtual machine here is your chance to configure it for your requirements. Edit the virtual machine configuration files listed below:
 
 REQUIRED: configure users in data_bags/users/*.json
   * Create a file like "pat.json" with your user settings
@@ -71,25 +69,36 @@ OPTIONAL: configure your virtual machine parameters in ./Vagrantfile
 
 OPTIONAL: add more recipes & packages in recipes/developers.rb
 
-# Build the virtual machine - finally!
-In a Windows command-shell:
+## Build the virtual machine - finally!
+
+In a Windows command-shell type:
 
     vagrant up
 
-    :: ... several minutes from now: success!
+Now wait a bit. My computer takes about 15 minutes to build the VM.
 
-# One more step: update virtual box guest additions
+
+## Update VirtualBox Guest Additions
+
+Your computer may have a different version of VirtualBox than that which was used to build the original virtual machine image. You'll need to upgrade VirtualBox Guest Additions to make things work properly.
+
+Login to the virtual machine and restart it so that it boots into X-windows. This shouldn't be necessary but I have discovered that if you don't then the VirtualBox Guest Additions for X-windows don't work.
+
+On the guest virtual machine login and restart:
+
+    sudo shutdown -f -r now
+
+On the host operating system (after the guest restarts)
 
     vagrant vbguest
 
-... and reboot the VM one more time so that useful settings like Bidirectional Clipboard copy/paste work.
+Now reboot the VM one more time so that X-windows restarts with the new additions.
 
 # Common errors
 
-Sometimes things don't work. Check the file ERRORS.md for solutions to
-common problems.
+Check the file ERRORS.md for solutions to common problems.
 
-# MIDDLE MOUSE BUTTON
+## Middle mouse button
 
 I can't survive without middle-mouse-button scrolling in web browsers. It took me *hours* to find this solution; I am providing it to you so you can avoid this pain yourself. If your middle mouse button is not working, and you're using a Synaptics mouse driver (ThinkPad laptop, others?) then try this:
 
@@ -109,23 +118,18 @@ I can't survive without middle-mouse-button scrolling in web browsers. It took m
 
     :: From https://forums.virtualbox.org/viewtopic.php?f=6&t=28794
 
-# Git note
+## More
 
-On Windows, it is necessary to configure repositories to use the git protocol
-instead of https to avoid password prompts:
+You now have a fully-functional (we hope) Linux virtual machine. There are many more useful software packages you can install to make it fully functional.
 
-    git remote add origin git@github.com:webcoyote/linux-vm.git
+Here's another project that I use to automate the process of installing the software that I use:
 
-I mention this because, by default GitHub suggests HTTPS-based URLs instead of
-GIT-based, and it took me a while to figure out why I had to use a password
-when my SSH key was there!
+https://github.com/webcoyote/workstation-setup
 
-
-# Mea culpa
-
-If this doesn't work it is probably my fault, I would appreciate your
-feedback so I can fix it for you :)
 
 # Author
 
 Author:: Patrick Wyatt (pat@codeofhonor.com)
+
+If this doesn't work it is probably my fault, I would appreciate your
+feedback so I can fix it for you :)
