@@ -16,7 +16,6 @@ pre-requisites yet.
 * Root login disabled (for security)
 * Easily update VirtualBox Guest Additions ("vagrant vbguest --do rebuild")
 * Gnome desktop, Firefox browser
-* Optional: XMonad window manager
 * Optional: installs your "dotfiles" from a separate git repository
 
 # Installation and configuration

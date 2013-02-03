@@ -6,31 +6,16 @@
 - all client stuff should done during the post-boot process so that it can be used for physical computers as well as VMs
 
     Gnome Desktop
-    XMonad
     Firefox
-    meld
     gnome-system-monitor
-
-
-## Configure git
-
-cat | ~/.gitconfig <<EOF
-[user]
-  name = Patrick Wyatt
-  email = pat@codeofhonor.com
-
-[diff]
-  tool = meld
-
-[difftool]
-  prompt = false
-EOF
 
 
 ## Network
 
-CentOS box is a bit cranky with dual NICs.
-=> does not work: Add "GATEWAYDEV=eth1" to /etc/sysconfig/network
+CentOS box is a bit cranky with dual NICs
+* Disable network manager and enable network
+  http://xmodulo.com/2013/01/how-to-configure-networking-in-centos-desktop-with-command-line.html
+* Add "GATEWAYDEV=eth1" to /etc/sysconfig/network
 
 
 ## SSH
