@@ -2,8 +2,6 @@
 
 This project is designed to make it easy to build Linux virtual machines on Windows.
 
-I've written these instructions based on the assumption that you're running vanilla Windows so this should work even if you don't have any of the pre-requisites yet.
-
 ## What you get
 
 Here are the features of the Linux virtual machine you will create:
@@ -18,7 +16,7 @@ Here are the features of the Linux virtual machine you will create:
 
 ## Prerequisites
 
-Install these software packages on your Windows computer
+Install these software packages on your Windows computer:
 
 * [Oracle VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * [Ruby(Windows)](http://rubyinstaller.org/downloads/)
