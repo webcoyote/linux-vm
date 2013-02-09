@@ -1,0 +1,42 @@
+// 1. Edit this file to include your desired personal settings
+// 2. Delete all lines starting with // as JavaScript doesn't support comments
+// 3. Rename the file to <YOURNAME>.json
+
+{
+// REQUIRED: Set your login name (ex: "pat")
+  "id": "",
+
+// REQUIRED: Set login shell (ex: "/bin/bash" or "/bin/zsh"). For other shells you
+// must include your shell package in ../../recipes/developer.rb
+  "shell": "/bin/bash",
+
+// OPTIONAL: Set your full name (ex: "Patrick Wyatt")
+  "comment": "",
+
+// OPTIONAL: automatically log this user into the console (desktop) when booting
+  "desktop-autologin": "true",
+
+// OPTIONAL: who needs a screen-saver for a virtual machine?
+  "disable-screensaver": "true",
+
+// OPTIONAL: If you have a git repository that stores your dotfiles you can
+// automatically sync it here. The repository is cloned into ~/.dotfiles.
+// See https://github.com/webcoyote/dotfiles for an example.
+// NOTE: the repository must be publicly visible
+// NOTE: you must use a URL that supports anonymous access
+// example: "git://github.com/webcoyote/dotfiles.git"
+// "dotfiles-repo": ""
+
+// SSH keys: if you want to be able to access this box using SSH from your
+// host (Windows) system, you'll want to include one or more public SSH keys
+// here. See https://help.github.com/articles/generating-ssh-keys
+// NOTE: Remember to use the contents of "id_rsa.pub" (the public part), not
+// id_rsa (the private part)
+  "ssh_keys": [
+// example:
+//    "ssh-rsa AAAA < ... lots more ... > == pat@MyLaptop",
+  ],
+
+// REQUIRED: Do not modify
+  "groups": [ "sysadmin" ]
+}

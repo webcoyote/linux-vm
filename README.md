@@ -1,89 +1,49 @@
 # Overview of linux-vm
 
-This project is designed to make it easy to build Linux virtual machines on Windows.
+To build a complete Linux virtual machine (VM) on your Windows computer; just run the following command:
 
-## What you get
+    @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/webcoyote/linux-vm/master/INSTALL.ps1'))"
+
+That's it!
+
+In about 15 minutes (depending upon your Internet speed) your VM will be ready.
+
+
+## About your new Linux virtual machine
 
 Here are the features of the Linux virtual machine you will create:
 
-* Gnome desktop, Firefox browser
-* Password-less login to local console
-* Password-less access to sudo for your account
-* SSH key-based login; SSH access via passwords disabled
+* Linux CentOS 6.3 operating system
+* Gnome desktop
+* Firefox browser
+
+Additional features of your virtual machine
+* Login to the local VM console without typing a password
+* Access to sudo without typing a password
+* Remotely login to the VM using SSH key-based login
+* Remote access to SSH using passwords is disabled (for security)
 * Root login disabled (for security)
-* Easily update VirtualBox Guest Additions ("vagrant vbguest --do rebuild")
-* Optional: installs your "dotfiles" from a separate git repository
-
-## Prerequisites
-
-Install the software packages on your Windows computer:
-
-* [Oracle VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-* [Vagrant](http://downloads.vagrantup.com/)
-* [Git](http://git-scm.com/download)
-
-Note: I find it useful to install Git with the setting "Run Git and included Unix tools from the Windows Command Prompt" to that ssh.exe is accessible on the command-line.
-
-## Clone "this" repository
-
-In a Windows command-shell run these commands
-
-    :: make the C:\dev directory
-    c:
-    mkdir \dev
-    cd \dev
-
-    :: Clone the repo
-    git clone https://github.com/webcoyote/linux-vm
-    cd linux-vm
-
-    :: Install required ruby gems into the ruby
-    :: embedded with vagrant
-    vagrant gem install berkshelf vagrant-vbguest
+* VirtualBox Guest Additions updated ("vagrant vbguest")
+* Optional: creates a personal account (instead of using "vagrant" account)
+* Optional: installs your "dotfiles" from your git repository
 
 
-## Configuration
+## What does installation do?
 
-Before you build your virtual machine here is your chance to configure it for your requirements. Edit the virtual machine configuration files listed below:
+The installation script assumes that you don't have any of the required software already installed on your computer, and installs it for you:
+* Chocolatey (a "package manager" for installing software on Windows)
+* Oracle VirtualBox (free virtualization software)
+* Vagrant (a virtual machine configuration utility)
+* Git (revision control software)
 
-REQUIRED: configure users in data_bags/users/*.json
-  * Create a file like "pat.json" with your user settings
-  * You can create more users by adding multiple files
-  * DELETE pat.json so I don't have access to your computer!
+If you'd like to know the details you can read the installation script here: https://github.com/webcoyote/linux-vm/blob/master/INSTALL.ps1
 
-OPTIONAL: configure your virtual machine parameters in ./Vagrantfile
-  * OS image, CPU count, memory, networking, etc.
-
-OPTIONAL: add more recipes & packages in recipes/developers.rb
-
-## Build the virtual machine - finally!
-
-In a Windows command-shell type:
-
-    vagrant up
-
-Now wait a bit. My computer takes about 15 minutes to build the VM.
-
-
-## Update VirtualBox Guest Additions
-
-Your computer may have a different version of VirtualBox than that which was used to build the original virtual machine image. You'll need to upgrade VirtualBox Guest Additions to make things work properly.
-
-Login to the virtual machine and restart it so that it boots into X-windows. This shouldn't be necessary but I have discovered that if you don't then the VirtualBox Guest Additions for X-windows don't work.
-
-On the guest virtual machine login and restart:
-
-    sudo shutdown -f -r now
-
-On the host operating system (after the guest restarts)
-
-    vagrant vbguest
-
-Now reboot the VM one more time so that X-windows restarts with the new additions.
 
 # Common errors
 
-Check the file ERRORS.md for solutions to common problems.
+
+Check ERRORS.md (https://github.com/webcoyote/linux-vm/blob/master/ERRORS.md) for solutions to common problems.
+
 
 ## Middle mouse button
 
@@ -104,6 +64,7 @@ I can't survive without middle-mouse-button scrolling in web browsers. It took m
         SynTPLpr.exe
 
     :: From https://forums.virtualbox.org/viewtopic.php?f=6&t=28794
+
 
 ## More
 
