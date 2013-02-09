@@ -73,7 +73,7 @@ Once you've created the virtual machine you can edit these configuration files t
 
 ### Add users
 
-Follow the directions in .\linux-vm\data_bags\users\user.json.sample.json and then run:
+Follow the directions in .\linux-vm\data_bags\template\yournamehere.json and then run:
 
     vagrant provision
 

@@ -1,6 +1,6 @@
 // 1. Edit this file to include your desired personal settings
 // 2. Delete all lines starting with // as JavaScript doesn't support comments
-// 3. Rename the file to <YOURNAME>.json
+// 3. Copy the file to ..\users\<YOURNAME>.json
 
 {
 // REQUIRED: Set your login name (ex: "pat")
