@@ -16,20 +16,15 @@ Here are the features of the Linux virtual machine you will create:
 
 ## Prerequisites
 
-Install these software packages on your Windows computer:
+Install the software packages on your Windows computer:
 
 * [Oracle VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-* [Ruby(Windows)](http://rubyinstaller.org/downloads/)
+* [Vagrant](http://downloads.vagrantup.com/)
 * [Git](http://git-scm.com/download)
 
-Configure git so that the full set of git utilities, particularly ssh.exe, are accessible. That is, include "...\git\cmd" AND "...\git\bin" in the PATH.
+Note: I find it useful to install Git with the setting "Run Git and included Unix tools from the Windows Command Prompt" to that ssh.exe is accessible on the command-line.
 
-## Configure git
-
-    git config --global user.name "Your Name Here"
-    git config --global user.email "your_email@example.com"
-
-## Clone this repository.
+## Clone "this" repository
 
 In a Windows command-shell run these commands
 
@@ -42,16 +37,10 @@ In a Windows command-shell run these commands
     git clone https://github.com/webcoyote/linux-vm
     cd linux-vm
 
-    :: Install required ruby gems
-    gem install bundler
-    bundle install
+    :: Install required ruby gems into the ruby
+    :: embedded with vagrant
+    vagrant gem install berkshelf vagrant-vbguest
 
-## Bug fix for vagrant
-
-Install a bug fix for vagrant in versions less than 1.06 (see https://github.com/mitchellh/vagrant/issues/1212 for details)
-
-    gem uninstall vagrant
-    install vagrant using installer: http://downloads.vagrantup.com
 
 ## Configuration
 
