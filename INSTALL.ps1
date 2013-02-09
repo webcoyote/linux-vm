@@ -172,7 +172,7 @@ function MakeVirtualMachine () {
 
   # Clone the repository
   if (! (Test-Path "$DEVELOPMENT_DIRECTORY\linux-vm\" -pathType container) ) {
-    &$GIT_CMD clone https://github.com/webcoyote/linux-vm
+    &$GIT_CMD clone https://github.com/webcoyote/linux-vm "$DEVELOPMENT_DIRECTORY\linux-vm"
   }
 
   Push-Location "$DEVELOPMENT_DIRECTORY\linux-vm"
