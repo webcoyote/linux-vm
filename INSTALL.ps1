@@ -2,7 +2,7 @@
 # by Patrick Wyatt 2/6/2013
 #
 # To run this command:
-# @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "iex ((new-object net.webclient).DownloadString(https://raw.github.com/webcoyote/linux-vm/master/INSTALL.ps1))"
+# @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/webcoyote/linux-vm/master/INSTALL.ps1'))"
 #
 
 #-----------------------------------------------
