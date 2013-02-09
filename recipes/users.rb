@@ -16,9 +16,6 @@ include_recipe 'users::sysadmins'
 # (i.e. passwords). See attributes/ssh.rb for details.
 include_recipe 'sudo'
 
-# Git-clone user dotfiles from data_bags/admins/*.json
-include_recipe 'chef-dotfiles'
-
 # Some VM box images will already have the vagrant user
 # configured in /etc/sudoers.d, but some won't; make it so
 sudo "vagrant" do
@@ -69,4 +66,9 @@ execute "set boot timeout=0" do
   user 'root'
   command "sed --in-place=.bak -r -e 's/timeout=[0-9]+/timeout=0/' /boot/grub/grub.conf"
 end
+
+
+# Git-clone user dotfiles from data_bags/admins/*.json
+# Must be done after password set to blank (above)
+include_recipe 'chef-dotfiles'
 
