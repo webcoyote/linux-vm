@@ -1,4 +1,4 @@
-# Linux-VM - builds a virtual machine that runs Linux on your Windows computer in 15 minutes
+# Linux-VM - Build a virtual machine that runs Linux on Windows in 15 minutes
 
 To build a complete Linux virtual machine (VM) on your Windows computer; just run the following command:
 
