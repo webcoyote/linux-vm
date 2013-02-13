@@ -5,6 +5,11 @@
 # @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/webcoyote/linux-vm/master/INSTALL.ps1'))"
 #
 
+
+# Fail on errors
+$ErrorActionPreference = 'Stop'
+
+
 #-----------------------------------------------
 # Configuration -- change these settings if desired
 #-----------------------------------------------
@@ -42,6 +47,28 @@
 
 
 #-----------------------------------------------
+#
+#-----------------------------------------------
+function Exec
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Position=0, Mandatory=1)]
+        [ScriptBlock]$Command,
+        [Parameter(Position=1, Mandatory=0)]
+        [string]$ErrorMessage = "ERROR: command failed:`n$Command"
+    )
+
+    &$Command
+
+    if ($LastExitCode -ne 0) {
+        write-host $ErrorMessage
+        exit 1
+    }
+}
+
+
+#-----------------------------------------------
 # Environment variables
 #-----------------------------------------------
 function AppendEnvAndGlobalUserPath ([String]$dir) {
@@ -57,6 +84,7 @@ function AppendEnvAndGlobalUserPath ([String]$dir) {
   $path += $dir
   [Environment]::SetEnvironmentVariable('PATH', $path, 'User')
 }
+
 
 #-----------------------------------------------
 # Install Chocolatey package manager
@@ -100,8 +128,8 @@ function InstallGit () {
   }
 
   # Verify git runnable
-  &$GIT_CMD --version > $null
-  if ($LASTEXITCODE) {
+  &$GIT_CMD --version
+  if ($LASTEXITCODE -ne 0) {
     write-host "ERROR: Unable to run git; did it install correctly?"
     write-host ("--> '" + $GIT_CMD + "' --version")
     exit 1
@@ -157,7 +185,9 @@ function InstallVagrant () {
   # Can't use "bundle install" because we're modifying
   # vagrant's embedded ruby instead of whatever ruby
   # might already be installed on this computer
-  &$script:VAGRANT_CMD gem install berkshelf vagrant-vbguest
+  write-host installing Berkshelf
+  Exec { &$VAGRANT_CMD gem install berkshelf vagrant-vbguest }
+  write-host Berkshelf complete
 }
 
 
@@ -173,24 +203,37 @@ function MakeVirtualMachine () {
   # Clone the repository
   if (! (Test-Path "$DEVELOPMENT_DIRECTORY\linux-vm\" -pathType container) ) {
     &$GIT_CMD clone https://github.com/webcoyote/linux-vm "$DEVELOPMENT_DIRECTORY\linux-vm"
+    if ($LASTEXITCODE -ne 0) {
+      write-host "ERROR: Unable to clone https://github.com/webcoyote/linux-vm"
+      exit 1
+    }
   }
 
   Push-Location "$DEVELOPMENT_DIRECTORY\linux-vm"
 
   # Run Vagrant to bring up the VM
-  &$script:VAGRANT_CMD up
+  Exec { &$VAGRANT_CMD up }
 
+  # The virtual machine is now complete! But ...
+  # VirtualBox Guest Additions may not be up to date.
+  # To correct this use vagrant vbguest. My experience
+  # has been that it is necessary to be in graphics
+  # mode before upgrading and to reboot afterwards,
+  # otherwise the guest desktop does not resize properly
+  # when resizing its window on the host system.
 
-  <# wait for Vagrant 1.07 when my ssh changes are incorporated
-    # Reboot the computer to switch to "X"
-    echo "sudo /sbin/init 5" | vagrant ssh
+  # shutdown the machine so that when it reboots it
+  # will start in runmode 5 (graphics). It may be
+  # possible to shortcut this with this instead:
+  #     echo "sudo /sbin/init 5" | vagrant ssh
+  # .. but only when my ssh changes are incorporated (Vagrant > 1.0.6)
+  Exec { &$VAGRANT_CMD reload --no-provision }
 
-    # Update VirtualBox guest additions
-    vagrant vbguest
+  # Update VirtualBox guest additions
+  Exec { &$VAGRANT_CMD vbguest }
 
-    # Restart the computer now that guest additions are up-to-date
-    echo "sudo shutdown -f -r now" | vagrant ssh
-  #>
+  # Restart the computer now that guest additions are up-to-date
+  Exec { &$VAGRANT_CMD reload --no-provision }
 
   Pop-Location
 }
