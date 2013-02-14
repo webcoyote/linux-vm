@@ -67,24 +67,50 @@ function Exec
     }
 }
 
+<#
+# What the fuck!?! PowerShell is supposed to be a scripting language
+# for system administrators, not a descent into the bowels of hell!
+# I understand *why* this happens, but not *how* a language could be
+# designed to work like this!
+
+  function Append ([String]$path, [String]$dir) {
+    [String]::concat($path, ";", $dir)
+  }
+  [String]::concat("a;b;c", ";", "d") # => a;b;c;d
+  Append("a;b;c", "d")                # => a;b;c d;
+  Append "a;b;c", "d"                 # => a;b;c d;
+  Append "a;b;c" "d"                  # => a;b;c;d
+#>
 
 #-----------------------------------------------
 # Environment variables
 #-----------------------------------------------
-function AppendEnvAndGlobalUserPath ([String]$dir) {
-  if (! ($dir.StartsWith(';')) ) {
-    $dir = ';' + $dir
-  }
+function AppendPath ([String]$path, [String]$dir) {
+  $result = $path.split(';') + $dir.split(';') |
+      where { $_ -ne '' } |
+      select -uniq
+  [String]::join(';', $result)
+}
+# AppendPath ";a;b;;c;" ";d;"    => a;b;c;d
 
+function AppendEnvAndGlobalPath ([String]$dir, [String]$target) {
   # Add to this shell's environment
-  $Env:Path += $dir
+  $Env:Path = AppendPath $Env:path $dir
 
-  # Add to the global environment
-  $path = [Environment]::GetEnvironmentVariable('Path', 'User')
-  $path += $dir
-  [Environment]::SetEnvironmentVariable('PATH', $path, 'User')
+  # Add to the global environment; $target => { 'Machine', User' }
+  $path = [Environment]::GetEnvironmentVariable('Path', $target)
+  $path = AppendPath $path $dir
+  [Environment]::SetEnvironmentVariable('Path', $path, $target)
 }
 
+function FindInEnvironmentPath ([String]$file) {
+  [Environment]::GetEnvironmentVariable('Path', 'Machine').split(';') +
+  [Environment]::GetEnvironmentVariable('Path', 'User').split(';') |
+    where { $_ -ne '' } |
+    foreach { join-path $_ $file } |
+    Where-Object { Test-Path $_ } |
+    Select-Object -First 1
+}
 
 #-----------------------------------------------
 # Install Chocolatey package manager
@@ -108,7 +134,7 @@ function InstallPackageManager () {
   iex ((new-object net.webclient).DownloadString($url))
 
   # Chocolatey sets the global path; set it for this shell too
-  $Env:Path += $Env:ChocolateyInstall + '\bin'
+  $Env:Path += "$Env:ChocolateyInstall\bin"
 }
 
 
@@ -144,12 +170,12 @@ function InstallGit () {
 
     2 {
       # => Run Git from the Windows Command Prompt
-      AppendEnvAndGlobalUserPath ($GIT_INSTALL_DIR + '\cmd')
+      AppendEnvAndGlobalPath "$GIT_INSTALL_DIR\cmd" "User"
     }
 
     3 {
       # => Run Git and included Unix tools from the Windows Command Prompt
-      AppendEnvAndGlobalUserPath ($GIT_INSTALL_DIR + '\bin')
+      AppendEnvAndGlobalPath "$GIT_INSTALL_DIR\bin" "User"
     }
   }
 
@@ -176,10 +202,7 @@ function InstallVagrant () {
 
   # While we just installed vagrant, it's only in the machine path, not in
   # the environment for this shell yet. So... go find vagrant
-  $script:VAGRANT_CMD = [Environment]::GetEnvironmentVariable('Path', 'Machine').split(';') |
-    Foreach { join-path $_ "vagrant.bat" } |
-    Where-Object { Test-Path $_ } |
-    Select-Object -First 1
+  $script:VAGRANT_CMD = FindInEnvironmentPath "vagrant.bat"
 
   # Install required gems for this project
   # Can't use "bundle install" because we're modifying
@@ -227,12 +250,15 @@ function MakeVirtualMachine () {
   # possible to shortcut this with this instead:
   #     echo "sudo /sbin/init 5" | vagrant ssh
   # .. but only when my ssh changes are incorporated (Vagrant > 1.0.6)
+  write-host "Restarting virtual machine"
   Exec { &$VAGRANT_CMD reload --no-provision }
 
   # Update VirtualBox guest additions
+  write-host "Updating VirtualBox guest additions"
   Exec { &$VAGRANT_CMD vbguest }
 
   # Restart the computer now that guest additions are up-to-date
+  write-host "Restarting virtual machine again"
   Exec { &$VAGRANT_CMD reload --no-provision }
 
   Pop-Location
