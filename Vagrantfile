@@ -8,12 +8,10 @@ Vagrant::Config.run do |config|
   config.vbguest.auto_update = false
 
   # OS selection; for a list of boxes see http://www.vagrantbox.es/
-    # Use Ubuntu Lucid Lynx image from
-      #config.vm.box = "lucid64"
-      #config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
-    # Use CentOS 6.3 image from Berkshelf https://github.com/reset/veewee-berkshelf
-      config.vm.box = "Berkshelf-CentOS-6.3-x86_64-minimal"
-      config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
+  # This box was built by Patrick Wyatt using my veewee repo at
+  # https://github.com/webcoyote/veewee-berkshelf
+  config.vm.box = "CoH-CentOS-6.3-x86_64-minimal"
+  config.vm.box_url = "https://dl.dropbox.com/s/xfxznlxv8p7g6oc/CoH-CentOS-6.3-x86_64-minimal.box"
 
   # Hardware
   config.vm.customize ["modifyvm", :id, "--memory", 1536]
