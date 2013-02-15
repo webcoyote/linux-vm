@@ -186,19 +186,9 @@ function InstallGit () {
 # Vagrant
 #-----------------------------------------------
 function InstallVagrant () {
-  # Install my version of vagrant instead of the default version.
-  # Why my version:
-  # * Uses the latest version of Vagrant (1.0.6)
-  # * Does NOT include jruby dependency (no longer required for vagrant)
-  # * Does NOT include putty dependency (yuck - use ssh.exe from git)
-  cinst vagrant-base
 
-  #write-host "*** Path: "
-  #write-host ($Env:path)
-  #write-host "*** Machine: "
-  #write-host ([Environment]::GetEnvironmentVariable('Path', 'Machine'))
-  #write-host "*** User: "
-  #write-host ([Environment]::GetEnvironmentVariable('Path', 'User'))
+  # Install the vagrant package
+  cinst vagrant
 
   # While we just installed vagrant, it's only in the machine path, not in
   # the environment for this shell yet. So... go find vagrant
