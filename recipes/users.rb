@@ -66,15 +66,8 @@ search("users", "groups:sysadmin NOT action:remove") do |u|
 
 end
 
-if platform?("ubuntu")
-  execute "set boot timeout to 0" do
-	user 'root'
-	command "sed --in-place=.bak -r -e 's/GRUB_TIMEOUT=[0-9]+/GRUB_TIMEOUT=0/' /etc/default/grub && update-grub"
-	not_if "grep -q 'GRUB_TIMEOUT=0' /etc/default/grub"
-  end
-else
-  execute "set boot timeout=0" do
-	user 'root'
-	command "sed --in-place=.bak -r -e 's/timeout=[0-9]+/timeout=0/' /boot/grub/grub.conf"
-  end
+execute "set boot timeout=0" do
+  user 'root'
+  command "sed --in-place=.bak -r -e 's/timeout=[0-9]+/timeout=0/' /boot/grub/grub.conf"
 end
+
