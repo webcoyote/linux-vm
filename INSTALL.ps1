@@ -16,7 +16,7 @@ $ErrorActionPreference = 'Stop'
 
   # Where do you like your projects installed?
   # For me it is C:\dev but you can change it here:
-  $DEVELOPMENT_DIRECTORY = $Env:SystemDrive + '\xdev'
+  $DEVELOPMENT_DIRECTORY = $Env:SystemDrive + '\dev'
 
   # By default Chocolatey wants to install to C:\chocolatey
   # but lots of folks on Hacker News don't like that. Override
@@ -85,13 +85,13 @@ function Exec
 #-----------------------------------------------
 # Environment variables
 #-----------------------------------------------
+# AppendPath ";a;b;;c;" ";d;"    => a;b;c;d
 function AppendPath ([String]$path, [String]$dir) {
   $result = $path.split(';') + $dir.split(';') |
       where { $_ -ne '' } |
       select -uniq
   [String]::join(';', $result)
 }
-# AppendPath ";a;b;;c;" ";d;"    => a;b;c;d
 
 function AppendEnvAndGlobalPath ([String]$dir, [String]$target) {
   # Add to this shell's environment
@@ -135,6 +135,9 @@ function InstallPackageManager () {
 
   # Chocolatey sets the global path; set it for this shell too
   $Env:Path += "$Env:ChocolateyInstall\bin"
+
+  # Install packages to C:\Bin so the root directory isn't polluted
+  cinst binroot
 }
 
 
@@ -186,28 +189,53 @@ function InstallGit () {
 # Vagrant
 #-----------------------------------------------
 function InstallVagrant () {
-
-  # Install the vagrant package
   cinst vagrant
+}
 
+function FindVagrantCmd () {
   # While we just installed vagrant, it's only in the machine path, not in
   # the environment for this shell yet. So... go find vagrant
   $script:VAGRANT_CMD = FindInEnvironmentPath "vagrant.bat"
+}
+
+function InstallVagrantPlugins () {
+  # Berkshelf requires components that must be compiled so
+  # it is necessary to install the Ruby DevKit
+  cinst ruby.devkit
+
+  # Set the devkit variables
+  # TODO: I would rather called .../DevKit/DevKitVars.ps1 and export the variables
+  # but ... how is that done in PowerShell?
+  $devkit = join-path $env:systemdrive $env:chocolatey_bin_root
+  $devkit = join-path $devkit DevKit
+  $env:path = "$devkit\bin;$devkit\mingw\bin;$env:path"
+
+  # Trying to install Berkshelf while including a Vagrantfile that references
+  # Berkshelf doesn't work, so change to a directory that should not contain
+  # a Vagrantfile.
+  Push-Location "C:\"
 
   # Install required gems for this project
   # Can't use "bundle install" because we're modifying
   # vagrant's embedded ruby instead of whatever ruby
   # might already be installed on this computer
   write-host installing Berkshelf
-  Exec { &$VAGRANT_CMD gem install berkshelf vagrant-vbguest }
+  FindVagrantCmd
+  Exec { &$VAGRANT_CMD plugin install berkshelf-vagrant }
   write-host Berkshelf complete
+
+  Pop-Location
 }
 
 
 #-----------------------------------------------
 # Make virtual machine
 #-----------------------------------------------
-function MakeVirtualMachine () {
+function InstallVirtualBox () {
+  cinst virtualbox
+}
+
+function CloneLinuxVmRepository () {
   # Create the development directory
   if (! (Test-Path $DEVELOPMENT_DIRECTORY -pathType container) ) {
     New-Item -ItemType directory -Path $DEVELOPMENT_DIRECTORY >$null
@@ -221,10 +249,13 @@ function MakeVirtualMachine () {
       exit 1
     }
   }
+}
 
+function MakeVirtualMachine () {
   Push-Location "$DEVELOPMENT_DIRECTORY\linux-vm"
 
   # Run Vagrant to bring up the VM
+  FindVagrantCmd
   Exec { &$VAGRANT_CMD up }
 
   # The virtual machine is now complete! But ...
@@ -234,6 +265,9 @@ function MakeVirtualMachine () {
   # mode before upgrading and to reboot afterwards,
   # otherwise the guest desktop does not resize properly
   # when resizing its window on the host system.
+
+
+<# VBGuest hasn't been updated to support Vagrant 1.1 yet
 
   # shutdown the machine so that when it reboots it
   # will start in runmode 5 (graphics). It may be
@@ -251,6 +285,8 @@ function MakeVirtualMachine () {
   write-host "Restarting virtual machine again"
   Exec { &$VAGRANT_CMD reload --no-provision }
 
+#>
+
   Pop-Location
 }
 
@@ -259,15 +295,12 @@ function MakeVirtualMachine () {
 # Main
 #-----------------------------------------------
 
-# Install Chocolatey
 InstallPackageManager
-
-# Install packages to C:\Bin so the root directory isn't polluted
-cinst binroot
-
-# Install required packages
 InstallGit
+InstallVirtualBox
 InstallVagrant
+InstallVagrantPlugins
+CloneLinuxVmRepository
 MakeVirtualMachine
 
 
