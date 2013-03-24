@@ -47,7 +47,7 @@ $ErrorActionPreference = 'Stop'
 
 
 #-----------------------------------------------
-#
+# Utility functions
 #-----------------------------------------------
 function Exec
 {
@@ -82,8 +82,9 @@ function Exec
   Append "a;b;c" "d"                  # => a;b;c;d
 #>
 
+
 #-----------------------------------------------
-# Environment variables
+# Path-handling
 #-----------------------------------------------
 # AppendPath ";a;b;;c;" ";d;"    => a;b;c;d
 function AppendPath ([String]$path, [String]$dir) {
@@ -103,14 +104,24 @@ function AppendEnvAndGlobalPath ([String]$dir, [String]$target) {
   [Environment]::SetEnvironmentVariable('Path', $path, $target)
 }
 
-function FindInEnvironmentPath ([String]$file) {
-  [Environment]::GetEnvironmentVariable('Path', 'Machine').split(';') +
-  [Environment]::GetEnvironmentVariable('Path', 'User').split(';') |
-    where { $_ -ne '' } |
-    foreach { join-path $_ $file } |
-    Where-Object { Test-Path $_ } |
-    Select-Object -First 1
+function FindInRegistryPath ([String]$file) {
+  $fullpath = (
+    [Environment]::GetEnvironmentVariable('Path', 'Machine').split(';') +
+    [Environment]::GetEnvironmentVariable('Path', 'User').split(';') |
+      where { $_ -ne '' } |
+      foreach { join-path $_ $file } |
+      Where-Object { Test-Path $_ } |
+      Select-Object -First 1
+  )
+
+  if ($fullpath -eq $null) {
+    write-host "ERROR: Cannot find '$fullpath' in the path"
+    exit 1
+  }
+
+  $fullpath
 }
+
 
 #-----------------------------------------------
 # Install Chocolatey package manager
@@ -192,39 +203,25 @@ function InstallVagrant () {
   cinst vagrant
 }
 
-function FindVagrantCmd () {
-  # While we just installed vagrant, it's only in the machine path, not in
-  # the environment for this shell yet. So... go find vagrant
-  $script:VAGRANT_CMD = FindInEnvironmentPath "vagrant.bat"
-}
-
 function InstallVagrantPlugins () {
-  # Berkshelf requires components that must be compiled so
-  # it is necessary to install the Ruby DevKit
-  cinst ruby.devkit
-
-  # Set the devkit variables
-  # TODO: I would rather called .../DevKit/DevKitVars.ps1 and export the variables
-  # but ... how is that done in PowerShell?
-  $devkit = join-path $env:systemdrive $env:chocolatey_bin_root
-  $devkit = join-path $devkit DevKit
-  $env:path = "$devkit\bin;$devkit\mingw\bin;$env:path"
-
   # Trying to install Berkshelf while including a Vagrantfile that references
-  # Berkshelf doesn't work, so change to a directory that should not contain
+  # Berkshelf doesn't work so change to a directory that should not contain
   # a Vagrantfile.
+  $savePath = $env:path
   Push-Location "C:\"
 
-  # Install required gems for this project
-  # Can't use "bundle install" because we're modifying
-  # vagrant's embedded ruby instead of whatever ruby
-  # might already be installed on this computer
+  # Berkshelf requires components that must be compiled with the Ruby DevKit
+  $vagrantCmd = FindInRegistryPath vagrant.bat
+  $vagrantDir = split-path -parent $vagrantCmd | split-path -parent
+  $devkit     = join-path $vagrantDir "embedded"
+  $env:path = "$devkit\bin;$devkit\mingw\bin;$env:path"
+
   write-host installing Berkshelf
-  FindVagrantCmd
-  Exec { &$VAGRANT_CMD plugin install berkshelf-vagrant }
+  Exec { &$vagrantCmd plugin install berkshelf-vagrant }
   write-host Berkshelf complete
 
   Pop-Location
+  $env:path = $savePath
 }
 
 
@@ -255,8 +252,8 @@ function MakeVirtualMachine () {
   Push-Location "$DEVELOPMENT_DIRECTORY\linux-vm"
 
   # Run Vagrant to bring up the VM
-  FindVagrantCmd
-  Exec { &$VAGRANT_CMD up }
+  $vagrantCmd = FindInRegistryPath vagrant.bat
+  Exec { &$vagrantCmd up }
 
   # The virtual machine is now complete! But ...
   # VirtualBox Guest Additions may not be up to date.
@@ -275,15 +272,15 @@ function MakeVirtualMachine () {
   #     echo "sudo /sbin/init 5" | vagrant ssh
   # .. but only when my ssh changes are incorporated (Vagrant > 1.0.6)
   write-host "Restarting virtual machine"
-  Exec { &$VAGRANT_CMD reload --no-provision }
+  Exec { &$vagrantCmd reload --no-provision }
 
   # Update VirtualBox guest additions
   write-host "Updating VirtualBox guest additions"
-  Exec { &$VAGRANT_CMD vbguest }
+  Exec { &$vagrantCmd vbguest }
 
   # Restart the computer now that guest additions are up-to-date
   write-host "Restarting virtual machine again"
-  Exec { &$VAGRANT_CMD reload --no-provision }
+  Exec { &$vagrantCmd reload --no-provision }
 
 #>
 
