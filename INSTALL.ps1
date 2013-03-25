@@ -216,9 +216,11 @@ function InstallVagrantPlugins () {
   $devkit     = join-path $vagrantDir "embedded"
   $env:path = "$devkit\bin;$devkit\mingw\bin;$env:path"
 
-  write-host installing Berkshelf
   Exec { &$vagrantCmd plugin install berkshelf-vagrant }
-  write-host Berkshelf complete
+
+<# VBGuest hasn't been updated to support Vagrant 1.1 yet
+  Exec { &$vagrantCmd plugin install vagrant-vbguest }
+#>
 
   Pop-Location
   $env:path = $savePath
@@ -253,7 +255,7 @@ function MakeVirtualMachine () {
 
   # Run Vagrant to bring up the VM
   $vagrantCmd = FindInRegistryPath vagrant.bat
-  Exec { &$vagrantCmd up }
+  Exec { &$vagrantCmd up --provider=virtualbox }
 
   # The virtual machine is now complete! But ...
   # VirtualBox Guest Additions may not be up to date.
@@ -263,17 +265,10 @@ function MakeVirtualMachine () {
   # otherwise the guest desktop does not resize properly
   # when resizing its window on the host system.
 
+  # Switch to graphics mode
+  Exec { &$vagrantCmd ssh -c "sudo /sbin/init 5" }
 
 <# VBGuest hasn't been updated to support Vagrant 1.1 yet
-
-  # shutdown the machine so that when it reboots it
-  # will start in runmode 5 (graphics). It may be
-  # possible to shortcut this with this instead:
-  #     echo "sudo /sbin/init 5" | vagrant ssh
-  # .. but only when my ssh changes are incorporated (Vagrant > 1.0.6)
-  write-host "Restarting virtual machine"
-  Exec { &$vagrantCmd reload --no-provision }
-
   # Update VirtualBox guest additions
   write-host "Updating VirtualBox guest additions"
   Exec { &$vagrantCmd vbguest }
@@ -281,7 +276,6 @@ function MakeVirtualMachine () {
   # Restart the computer now that guest additions are up-to-date
   write-host "Restarting virtual machine again"
   Exec { &$vagrantCmd reload --no-provision }
-
 #>
 
   Pop-Location
