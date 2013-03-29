@@ -268,15 +268,9 @@ function MakeVirtualMachine () {
   # Switch to graphics mode
   Exec { &$vagrantCmd ssh -c "sudo /sbin/init 5" }
 
-<# VBGuest hasn't been updated to support Vagrant 1.1 yet
   # Update VirtualBox guest additions
   write-host "Updating VirtualBox guest additions"
-  Exec { &$vagrantCmd vbguest }
-
-  # Restart the computer now that guest additions are up-to-date
-  write-host "Restarting virtual machine again"
-  Exec { &$vagrantCmd reload --no-provision }
-#>
+  Exec { &$vagrantCmd vbguest --auto-reboot }
 
   Pop-Location
 }

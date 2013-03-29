@@ -5,8 +5,7 @@ Vagrant.configure("2") do |config|
 
   # Run this command manually after XWindows is installed:
   # vagrant vbguest --do install
-# VBGuest hasn't been updated to support Vagrant 1.1 yet
-# config.vbguest.auto_update = false
+  config.vbguest.auto_update = false
 
   # OS selection; for a list of boxes see http://www.vagrantbox.es/
   # This box was built by Patrick Wyatt using my veewee repo at
