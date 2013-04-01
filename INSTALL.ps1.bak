@@ -277,9 +277,9 @@ function MakeVirtualMachine () {
 # Main
 #-----------------------------------------------
 
-InstallPackageManager
-InstallGit
-InstallVirtualBox
+#InstallPackageManager
+#InstallGit
+#InstallVirtualBox
 InstallVagrant
 InstallVagrantPlugins
 CloneLinuxVmRepository
