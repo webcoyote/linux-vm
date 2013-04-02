@@ -10,8 +10,10 @@ Vagrant.configure("2") do |config|
   # OS selection; for a list of boxes see http://www.vagrantbox.es/
   # This box was built by Patrick Wyatt using my veewee repo at
   # https://github.com/webcoyote/veewee-berkshelf
-  config.vm.box = "CoH-CentOS-6.3-x86_64-minimal"
-  config.vm.box_url = "https://dl.dropbox.com/s/xfxznlxv8p7g6oc/CoH-CentOS-6.3-x86_64-minimal.box"
+  #config.vm.box = "CoH-CentOS-6.3-x86_64-minimal"
+  #config.vm.box_url = "https://dl.dropbox.com/s/xfxznlxv8p7g6oc/CoH-CentOS-6.3-x86_64-minimal.box"
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   # Hardware
   config.vm.provider :virtualbox do |vb|
