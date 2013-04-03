@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
 
   # Network configuration
   #config.vm.forward_port 80, 8080
-  config.vm.network :bridged
+  #config.vm.network :bridged
   #config.vm.network :hostonly, "192.168.33.10"
 
   # Share an additional folder to the guest VM. The first argument is
