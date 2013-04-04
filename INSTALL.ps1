@@ -287,3 +287,9 @@ MakeVirtualMachine
 
 
 # Can I mention here how frequently PowerShell violates the principle of least surprise?
+
+write-host @"
+
+If you've just run this script for the first time you should exit this
+command shell and start another so your PATH variable is set correctly.
+"@
