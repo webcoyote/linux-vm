@@ -3,27 +3,26 @@
 # Recipe:: desktop_debian
 #
 
-#supdate apt-get -y update
-#sudo apt-get install -y python-software-properties
-#sudo add-apt-repository -y ppa:gnome3-team/gnome3
-#command "apt-get install ubuntu-gnome-desktop ubuntu-gnome-default-settings"
-
-
 # Install desktop
   execute "update apt" do
     command "apt-get update -y"
   end
 
-  execute "install gnome" do
+# Install ubuntu desktop (uses unity)
+  session="ubuntu"
+  execute "install ubuntu-desktop (with unity)" do
     command "apt-get install -y ubuntu-desktop"
   end
 
 
-# Browser
-  package "firefox"
+# Replace unity with gnome
+  session="gnome"
+  execute "install gnome shell" do
+    command "apt-get install -y gnome-shell"
+  end
 
 
-# Disable creensaver
+# Disable screensaver
   search("users", "disable-screensaver:true NOT action:remove") do |u|
     execute "disable screen saver for #{u['id']}" do
       user u['id']
@@ -46,6 +45,10 @@
       group 'root'
       mode '0644'
       action :create
-      variables(:username => u['id'])
+      variables(:username => u['id'], :session => session)
     end
   end
+
+
+# Browser
+  package "firefox"
