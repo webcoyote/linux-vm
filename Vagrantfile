@@ -3,6 +3,8 @@ require 'berkshelf/vagrant'
 Vagrant.configure("2") do |config|
   config.vm.hostname = "devbox"
 
+  config.berkshelf.enabled = true
+
   # Run this command manually after XWindows is installed:
   # vagrant vbguest --do install
   config.vbguest.auto_update = false
