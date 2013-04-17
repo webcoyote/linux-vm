@@ -1,4 +1,8 @@
 #!/bin/sh
+set -e  # bail on first error
+set -u  # bail on unbound variable reference
+set -x  # print command before executing it
+
 
 DEVELOPMENT_DIRECTORY=~/dev
 
@@ -12,25 +16,32 @@ VAGRANT_URL='http://files.vagrantup.com/packages/64e360814c3ad960d810456add977fd
 InstallVirtualBox() {
   curl -Lo virtualbox.dmg $VIRTUAL_BOX_URL
   hdiutil mount virtualbox.dmg
-  sudo installer -package /Volumes/VirtualBox/VirtualBox.pkg -target "/Volumes/Macintosh HD"
+  sudo installer -package /Volumes/VirtualBox/VirtualBox.pkg -target /
   hdiutil unmount /Volumes/VirtualBox
 }
 
 InstallVagrant() {
   curl -Lo vagrant.dmg $VAGRANT_URL
   hdiutil mount vagrant.dmg
-  sudo installer -package /Volumes/Vagrant/Vagrant.pkg -target "/Volumes/Macintosh HD"
+  sudo installer -package /Volumes/Vagrant/Vagrant.pkg -target /
   hdiutil unmount /Volumes/Vagrant
 }
 
 InstallVagrantPlugins() {
+  # Must not be in the same directory as a Vagrantfile
+  # or it might try to load plugins that don't exist
+  pushd / 2>&1 >/dev/null
   vagrant plugin install berkshelf-vagrant
   vagrant plugin install vagrant-vbguest
+  popd / 2>&1 >/dev/null
 }
 
 CloneLinuxVmRepository() {
   mkdir -p "$DEVELOPMENT_DIRECTORY"
-  git clone https://github.com/webcoyote/linux-vm "$DEVELOPMENT_DIRECTORY/linux-vm"
+
+  if [[ ! -d "$DEVELOPMENT_DIRECTORY/linux-vm" ]]; then
+    git clone https://github.com/webcoyote/linux-vm "$DEVELOPMENT_DIRECTORY/linux-vm"
+  fi
 }
 
 MakeVirtualMachine() {
@@ -38,18 +49,18 @@ MakeVirtualMachine() {
 
   vagrant up --provider=virtualbox
   vagrant ssh -c "sudo /sbin/init 5"
-  vagrant vbguest --autoreboot
+  vagrant vbguest --auto-reboot
 
   popd
 }
 
 
-set -e  # bail on first error
-set -u  # bail on unbound variable reference
-set -x  # print command before executing it
+# Ask for the password now so the rest of the install is uninterrupted
+sudo true
 
 InstallVirtualBox
 InstallVagrant
 InstallVagrantPlugins
 CloneLinuxVmRepository
 MakeVirtualMachine
+
