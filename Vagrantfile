@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
   Dir::mkdir("vm_data") unless FileTest::directory?("vm_data")
-  config.vm.synced_folder "vm_data/", "/vm_data"
+  config.vm.synced_folder "vm_data", "vm_data"
 
   config.vm.provision :chef_solo do |chef|
     chef.data_bags_path = "data_bags"
