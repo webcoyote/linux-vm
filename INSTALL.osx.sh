@@ -10,7 +10,7 @@ DEVELOPMENT_DIRECTORY=~/dev
 VIRTUAL_BOX_URL='http://download.virtualbox.org/virtualbox/4.2.12/VirtualBox-4.2.12-84980-OSX.dmg'
 
 # vagrant 1.1.5
-VAGRANT_URL='http://files.vagrantup.com/packages/64e360814c3ad960d810456add977fd4c7d47ce6/Vagrant.dmg'
+VAGRANT_URL='http://files.vagrantup.com/packages/7e400d00a3c5a0fdf2809c8b5001a035415a607b/Vagrant-1.2.2.dmg'
 
 
 InstallVirtualBox() {
@@ -31,7 +31,7 @@ InstallVagrantPlugins() {
   # Must not be in the same directory as a Vagrantfile
   # or it might try to load plugins that don't exist
   pushd / 2>&1 >/dev/null
-  vagrant plugin install berkshelf-vagrant
+  vagrant plugin install vagrant-berkshelf
   vagrant plugin install vagrant-vbguest
   popd / 2>&1 >/dev/null
 }

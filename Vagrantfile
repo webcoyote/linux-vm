@@ -35,8 +35,9 @@ Vagrant.configure("2") do |config|
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
-  Dir::mkdir("vm_data") unless FileTest::directory?("vm_data")
-  config.vm.synced_folder "vm_data", "vm_data"
+  vm_data = File.expand_path("../vm_data", __FILE__)
+  Dir::mkdir(vm_data) unless FileTest::directory?(vm_data)
+  config.vm.synced_folder "vm_data", vm_data
 
   config.vm.provision :chef_solo do |chef|
     chef.data_bags_path = "data_bags"
