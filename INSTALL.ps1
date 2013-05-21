@@ -216,7 +216,7 @@ function InstallVagrantPlugins () {
   $devkit     = join-path $vagrantDir "embedded"
   $env:path = "$devkit\bin;$devkit\mingw\bin;$env:path"
 
-  Exec { &$vagrantCmd plugin install berkshelf-vagrant }
+  Exec { &$vagrantCmd plugin install vagrant-berkshelf }
   Exec { &$vagrantCmd plugin install vagrant-vbguest }
 
   Pop-Location
