@@ -1,7 +1,10 @@
 require 'berkshelf/vagrant'
+require 'socket'
 
 Vagrant.configure("2") do |config|
-  config.vm.hostname = "devbox"
+  # When you have several of computers and lots of VMs setting the
+  # name to something useful is a good idea!
+  config.vm.hostname = "vm#{rand(10..99)}--#{Socket.gethostname}"
 
   config.berkshelf.enabled = true
 
