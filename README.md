@@ -13,7 +13,7 @@ Login with the user name: **vagrant**
 
 Here are the features of the Linux virtual machine you will create (all configurable):
 
-* Linux [CentOS](https://www.centos.org/) 6.3 operating system
+* Linux [Ubuntu](http://www.ubuntu.com/) 12.04 operating system ("precise")
 * [Gnome](http://www.gnome.org/) desktop
 * [Firefox](http://www.mozilla.org/en-US/firefox/new/) browser
 
