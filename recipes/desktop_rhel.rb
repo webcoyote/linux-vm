@@ -40,6 +40,8 @@
 # Browser
   package "firefox"
 
+# Copy/paste from command-line
+  package "xsel"
 
 # Disable creensaver
   search("users", "disable-screensaver:true NOT action:remove") do |u|
