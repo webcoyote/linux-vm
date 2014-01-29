@@ -1,0 +1,49 @@
+#!/bin/sh
+# by Patrick Wyatt
+# /etc/init.d/xmonadkey.sh
+#
+# What is this for?
+#
+# It remaps XF86Copy key (not found on standard keyboards) to the left Windows key. This enables the left Windows key to be used for XMonad inside a virtual machine without Winblows stealing the key input.
+#
+# On the Windows machine hosting the virtual machine it is necessary to remap the left Windows key to F15, which is unused on modern computers.
+#
+
+### BEGIN INIT INFO
+# Provides:          xmonadkey
+# Required-Start:    all
+# Required-Stop:
+# Default-Start:     1 2 3 4 5
+# Default-Stop:
+# Short-Description: Key remapper for xmonad
+# Description: Remap XF86Copy key to the left Windows key
+### END INIT INF
+
+log () {
+  logger -is -t xmonadkey "$@"
+}
+
+# Require sudo
+if [ $(id -u) -ne 0 ]; then
+    log "ERROR: Must run as root; use sudo"
+    exit 1
+fi
+
+case "$1" in
+  --install)
+    update-rc.d xmonadkey start 20 1 2 3 4 5 .
+  ;;
+
+  --remove)
+    update-rc.d -f xmonadkey remove
+  ;;
+
+  start)
+    setkeycodes 66 133
+    log "remap 66 133"
+  ;;
+
+  *)
+    echo "Usage: $(basename $0) {--install|--remove|start}"
+  ;;
+esac
