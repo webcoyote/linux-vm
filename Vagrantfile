@@ -6,7 +6,10 @@ Vagrant.configure("2") do |config|
   # name to something useful is a good idea!
   config.vm.hostname = "vm#{rand(10..99)}--#{Socket.gethostname}"
 
+  # Configure plugins
+  config.omnibus.chef_version = :latest
   config.berkshelf.enabled = true
+  config.omnibus.chef_version = :latest
 
   # Run this command manually after XWindows is installed:
   # vagrant vbguest --do install

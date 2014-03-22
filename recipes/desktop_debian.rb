@@ -52,3 +52,6 @@
 
 # Browser
   package "firefox"
+
+# Copy/paste from command-line
+  package "xsel"

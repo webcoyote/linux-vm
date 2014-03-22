@@ -31,6 +31,7 @@ InstallVagrantPlugins() {
   # Must not be in the same directory as a Vagrantfile
   # or it might try to load plugins that don't exist
   pushd / 2>&1 >/dev/null
+  vagrant plugin install vagrant-omnibus
   vagrant plugin install vagrant-berkshelf
   vagrant plugin install vagrant-vbguest
   popd / 2>&1 >/dev/null
