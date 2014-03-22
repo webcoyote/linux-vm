@@ -200,7 +200,9 @@ function InstallGit () {
 # Vagrant
 #-----------------------------------------------
 function InstallVagrant () {
-  cinst vagrant
+  # We need to pin a version of vagrant that plays nice with the Berkshelf
+  # plugin.
+  cinst vagrant -version 1.4.3
 }
 
 function InstallVagrantPlugins () {
@@ -264,7 +266,7 @@ function MakeVirtualMachine () {
   # when resizing its window on the host system.
 
   # Switch to graphics mode
-  Exec { &$vagrantCmd ssh -c "sudo /sbin/init 5" }
+  Exec { &$vagrantCmd ssh -c "sudo /sbin/init 5" -- -n -T }
 
   # Update VirtualBox guest additions
   write-host "Updating VirtualBox guest additions"
