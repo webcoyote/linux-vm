@@ -1,8 +1,13 @@
 # Install script for linux-vm project
 # by Patrick Wyatt 2/6/2013
 #
-# To run this command:
-# @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/webcoyote/linux-vm/master/INSTALL.ps1'))"
+# To run this script locally:
+#   @powershell -NoProfile -ExecutionPolicy Unrestricted -File INSTALL.ps1
+#   - or -
+#   test.bat
+#
+# To download and run this script:
+#   @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/webcoyote/linux-vm/master/INSTALL.ps1'))"
 #
 
 
@@ -31,19 +36,12 @@ $ErrorActionPreference = 'Stop'
   # You probably want #2 or #3 so you can use git from a DOS command shell
   # More details: http://www.geekgumbo.com/2010/04/09/installing-git-on-windows/
   #
+  # Suggestion: add "export PATH=/bin:$PATH" to your ~/.bashrc file so
+  # that git-bash utilities have precedence over Windows utilities with
+  # the same name, e.g. find.exe
+  #
   # Pick one:
   $GIT_INSTALL_MODE=3
-
-
-#-----------------------------------------------
-# Constants
-#-----------------------------------------------
-#TODO: discover where git is installed using the same trick as for Vagrant
-  # Git is assumed to be installed here, which is true
-  # as of 2/7/2013. But I can't control what the package
-  # manager does so I'll hardcode these here and check
-  $GIT_INSTALL_DIR = ${Env:ProgramFiles(x86)} + '\Git'
-  $GIT_CMD = $GIT_INSTALL_DIR + '\cmd\git.exe'
 
 
 #-----------------------------------------------
@@ -105,15 +103,16 @@ function AppendEnvAndGlobalPath ([String]$dir, [String]$target) {
 }
 
 function FindInRegistryPath ([String]$file) {
-  $fullpath = (
     [Environment]::GetEnvironmentVariable('Path', 'Machine').split(';') +
     [Environment]::GetEnvironmentVariable('Path', 'User').split(';') |
       where { $_ -ne '' } |
       foreach { join-path $_ $file } |
       Where-Object { Test-Path $_ } |
       Select-Object -First 1
-  )
+}
 
+function FindInRegistryPathCheck ([String]$file) {
+  $fullpath = FindInRegistryPath $file
   if ($fullpath -eq $null) {
     write-host "ERROR: Cannot find '$fullpath' in the path"
     exit 1
@@ -122,14 +121,46 @@ function FindInRegistryPath ([String]$file) {
   $fullpath
 }
 
+function VerifyInstallation([String]$exe, [String]$versionOption) {
+  # Find command in path
+  $cmd = FindInRegistryPath $exe
+  if ((! $cmd) -or ! (Test-Path $cmd) ) {
+    write-host "ERROR: I thought I just installed '" + $exe + "' but now I can't find it!"
+    exit 1
+  }
+
+  # Verify it runs
+  if ($versionOption) {
+    &$cmd $versionOption | out-null
+    if ($LASTEXITCODE -ne 0) {
+      write-host "ERROR: Unable to run '" + $exe + "'. Did it install correctly?"
+      exit 1
+    }
+  }
+
+  $cmd
+}
+
 
 #-----------------------------------------------
 # Install Chocolatey package manager
 #-----------------------------------------------
 function InstallPackageManager () {
-  # Set Chocolatey directory unless already set or program already installed
+  # If the chocolatey install directory is not set in this command shell's
+  # environment then check the global environment
+  if (! $Env:ChocolateyInstall) {
+    $Env:ChocolateyInstall = [Environment]::GetEnvironmentVariable('Path', 'User')
+  }
+
+  # If it still isn't set then use default directory
   if (! $Env:ChocolateyInstall) {
     $Env:ChocolateyInstall = $CHOCOLATEY_DIRECTORY
+  }
+
+  # Chocolatey already installed?
+  if (Test-Path "$Env:ChocolateyInstall\bin\cinst.bat") {
+    write-host "Skipping chocolatey package manager installation"
+    return
   }
 
   # Save install location for future shells. Any shells that have already
@@ -143,6 +174,7 @@ function InstallPackageManager () {
   # Install Chocolatey
   $url = 'http://chocolatey.org/install.ps1'
   iex ((new-object net.webclient).DownloadString($url))
+  VerifyInstallation cinst
 
   # Chocolatey sets the global path; set it for this shell too
   $Env:Path += "$Env:ChocolateyInstall\bin"
@@ -156,26 +188,18 @@ function InstallPackageManager () {
 # Git
 #-----------------------------------------------
 function InstallGit () {
+  $gitCmd = FindInRegistryPath git.exe
+  if ($gitCmd) {
+    write-host "Skipping git installation"
+    return
+  }
 
   # Install the git package
   cinst git
+  $gitCmd = VerifyInstallation git.exe --version
 
-  # Verify git installed
-  if (! (Test-Path $GIT_CMD) ) {
-    write-host "ERROR: I thought I just installed git but now I can't find it here:"
-    write-host ("--> " + $GIT_CMD)
-    exit 1
-  }
-
-  # Verify git runnable
-  &$GIT_CMD --version
-  if ($LASTEXITCODE -ne 0) {
-    write-host "ERROR: Unable to run git; did it install correctly?"
-    write-host ("--> '" + $GIT_CMD + "' --version")
-    exit 1
-  }
-
-  # Fix path based on git installation mode
+  # Update path based on git installation mode
+  $gitDir = split-path -parent $gitCmd | split-path -parent
   switch ($GIT_INSTALL_MODE) {
     1 {
       # => Use Git Bash only
@@ -184,12 +208,13 @@ function InstallGit () {
 
     2 {
       # => Run Git from the Windows Command Prompt
-      AppendEnvAndGlobalPath "$GIT_INSTALL_DIR\cmd" "User"
+      AppendEnvAndGlobalPath "$gitDir\cmd" "User"
     }
 
     3 {
       # => Run Git and included Unix tools from the Windows Command Prompt
-      AppendEnvAndGlobalPath "$GIT_INSTALL_DIR\bin" "User"
+      AppendEnvAndGlobalPath "$gitDir\cmd" "User"
+      AppendEnvAndGlobalPath "$gitDir\bin" "User"
     }
   }
 
@@ -200,30 +225,29 @@ function InstallGit () {
 # Vagrant
 #-----------------------------------------------
 function InstallVagrant () {
-  # We need to pin a version of vagrant that plays nice with the Berkshelf
-  # plugin.
+  $vagrantCmd = FindInRegistryPath vagrant.bat
+  if ($vagrantCmd) {
+    write-host "Skipping vagrant installation"
+    return
+  }
+
+  # We need to pin a version of vagrant that plays nice with the Berkshelf plugin
   cinst vagrant -version 1.4.3
+  VerifyInstallation vagrant.bat --version
 }
 
 function InstallVagrantPlugins () {
-  # Trying to install Berkshelf while including a Vagrantfile that references
-  # Berkshelf doesn't work so change to a directory that should not contain
-  # a Vagrantfile.
-  $savePath = $env:path
+  # Trying to run Vagrant from a directory that includes a Vagrantfile
+  # doesn't work so change to a directory that should not contain one
   Push-Location "C:\"
 
   # Berkshelf requires components that must be compiled with the Ruby DevKit
-  $vagrantCmd = FindInRegistryPath vagrant.bat
-  $vagrantDir = split-path -parent $vagrantCmd | split-path -parent
-  $devkit     = join-path $vagrantDir "embedded"
-  $env:path = "$devkit\bin;$devkit\mingw\bin;$env:path"
-
+  $vagrantCmd = FindInRegistryPathCheck vagrant.bat
   Exec { &$vagrantCmd plugin install vagrant-omnibus }
   Exec { &$vagrantCmd plugin install vagrant-berkshelf }
   Exec { &$vagrantCmd plugin install vagrant-vbguest }
 
   Pop-Location
-  $env:path = $savePath
 }
 
 
@@ -231,6 +255,14 @@ function InstallVagrantPlugins () {
 # Make virtual machine
 #-----------------------------------------------
 function InstallVirtualBox () {
+  if (FindInRegistryPath "VirtualBox") {
+    write-host "Skipping VirtualBox installation"
+    return
+  }
+  if (Test-Path "C:\Program Files\Oracle\VirtualBox\VirtualBox.exe") {
+    write-host "Skipping VirtualBox installation"
+    return
+  }
   cinst virtualbox
 }
 
@@ -242,7 +274,8 @@ function CloneLinuxVmRepository () {
 
   # Clone the repository
   if (! (Test-Path "$DEVELOPMENT_DIRECTORY\linux-vm\" -pathType container) ) {
-    &$GIT_CMD clone https://github.com/webcoyote/linux-vm "$DEVELOPMENT_DIRECTORY\linux-vm"
+    $gitCmd = FindInRegistryPathCheck git.exe
+    &$gitCmd clone https://github.com/webcoyote/linux-vm "$DEVELOPMENT_DIRECTORY\linux-vm"
     if ($LASTEXITCODE -ne 0) {
       write-host "ERROR: Unable to clone https://github.com/webcoyote/linux-vm"
       exit 1
@@ -254,8 +287,8 @@ function MakeVirtualMachine () {
   Push-Location "$DEVELOPMENT_DIRECTORY\linux-vm"
 
   # Run Vagrant to bring up the VM
-  $vagrantCmd = FindInRegistryPath vagrant.bat
-  Exec { &$vagrantCmd up --provider=virtualbox }
+  $vagrantCmd = FindInRegistryPathCheck vagrant.bat
+  Exec { &$vagrantCmd up --provider=virtualbox --provision }
 
   # The virtual machine is now complete! But ...
   # VirtualBox Guest Additions may not be up to date.

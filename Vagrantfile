@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
   # Configure plugins
   config.omnibus.chef_version = :latest
   config.berkshelf.enabled = true
+  config.omnibus.chef_version = :latest
 
   # Run this command manually after XWindows is installed:
   # vagrant vbguest --do install
