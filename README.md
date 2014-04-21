@@ -2,7 +2,7 @@
 
 To build a complete Linux virtual machine (VM) on your Windows computer; just run the following command:
 
-    @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/webcoyote/linux-vm/master/INSTALL.ps1'))"
+    powershell -NoProfile -ExecutionPolicy Unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/webcoyote/linux-vm/master/INSTALL.ps1'))"
 
 That's it! In a few minutes (depending upon your Internet speed) your VM will be ready.
 
