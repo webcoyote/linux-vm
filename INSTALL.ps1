@@ -149,7 +149,7 @@ function InstallPackageManager () {
   # If the chocolatey install directory is not set in this command shell's
   # environment then check the global environment
   if (! $Env:ChocolateyInstall) {
-    $Env:ChocolateyInstall = [Environment]::GetEnvironmentVariable('Path', 'User')
+    $Env:ChocolateyInstall = [Environment]::GetEnvironmentVariable('ChocolateyInstall', 'User')
   }
 
   # If it still isn't set then use default directory
